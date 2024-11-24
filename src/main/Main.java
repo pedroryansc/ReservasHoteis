@@ -6,6 +6,7 @@ import java.util.Scanner;
 import enumerado.Categoria;
 import hotel.ArvoreHoteis;
 import hotel.Hotel;
+import quarto.Quarto;
 
 public class Main {
 	
@@ -127,7 +128,7 @@ public class Main {
 								do {
 									System.out.println("O que você gostaria de fazer? \n"
 										+ "(1) Reservar quarto \n(2) Consultar reservas \n(3) Cancelar reserva \n"
-										+ "(4) Histórico de reservas canceladas \n(5) Cadastrar quarto \n(6) Consultar quartos"
+										+ "(4) Histórico de reservas canceladas \n(5) Cadastrar quarto \n(6) Consultar quartos \n"
 										+ "(0) Voltar");
 									
 									opcao = entrada.nextInt();
@@ -149,11 +150,11 @@ public class Main {
 									
 									entrada.nextLine();
 									
-									System.out.println("Número do quarto (ou ENTER para cancelar):");
-									String numero = entrada.nextLine();
+									System.out.println("Número do quarto (ou 0 para cancelar):");
+									int numero = entrada.nextInt();
 									
-									if(numero.equals(""))
-										System.out.println("Cadastro cancelado.");
+									if(numero == 0)
+										System.out.println("\nCadastro cancelado.");
 									else {
 										System.out.println();
 										
@@ -166,7 +167,7 @@ public class Main {
 											
 											opcaoCategoria = entrada.nextInt();
 											
-											invalido = opcaoCategoria < 1 || opcaoCategoria > Categoria.quantOpcoes();
+											invalido = opcaoCategoria < 1 || opcaoCategoria > Categoria.values().length;
 											
 											verificaValidade(invalido);
 										} while(invalido);
@@ -181,8 +182,23 @@ public class Main {
 									
 									// Consultar quartos
 									
-									System.out.println("Quartos de " + hotel.getNome());
+									List<Quarto> quartos = hotel.listarQuartos();
 									
+									System.out.println("Quartos de " + hotel.getNome() + "\n");
+									
+									if(quartos.isEmpty())
+										System.out.println("Nenhum quarto foi cadastrado.");
+									else {
+										for(Quarto quarto : quartos)
+											System.out.println("- " + quarto.getNumero() + " (" + quarto.getCategoria() + ")");
+									}
+									
+									System.out.println("\nInsira qualquer tecla para voltar:");
+									
+									entrada.nextLine();
+									entrada.nextLine();
+									
+									System.out.println();
 								}
 							}
 						}

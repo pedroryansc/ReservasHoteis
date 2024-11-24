@@ -5,21 +5,22 @@ import enumerado.Cor;
 
 public class Quarto {
 
-	private String numero;
+	private int numero;
 	private Categoria categoria;
 	private Cor cor;
 	private Quarto esquerdo, direito, pai;
 	
-	public Quarto(String numero, int opcaoCategoria) {
+	public Quarto(int numero, int opcaoCategoria) {
 		this.numero = numero;
-		
+		this.categoria = Categoria.getCategoria(opcaoCategoria);
+		this.cor = Cor.VERMELHO;
 	}
 
-	public String getNumero() {
+	public int getNumero() {
 		return numero;
 	}
 
-	public void setNumero(String numero) {
+	public void setNumero(int numero) {
 		this.numero = numero;
 	}
 

@@ -1,26 +1,25 @@
 package enumerado;
 
 public enum Categoria {
-	Econômico(1),
-	Luxo(2);
-	
-	Adicionar mais categorias
+	Standard(1),
+	Master(2),
+	Deluxe(3);
 	
 	private int numOpcao;
 	
 	Categoria(int numOpcao){
 		this.setNumOpcao(numOpcao);
 	}
-	
-	public static int quantOpcoes() {
-		int cont = 0;
-		
-		for(Categoria categoria : values())
-			cont++;
-		
-		return cont;
-	}
 
+	public static Categoria getCategoria(int numOpcao) {
+		for(Categoria categoria : values()) {
+			if(categoria.getNumOpcao() == numOpcao)
+				return categoria;
+		}
+		
+		return null;
+	}
+	
 	public int getNumOpcao() {
 		return numOpcao;
 	}
