@@ -9,6 +9,7 @@ import cliente.Cliente;
 import enumerado.Cor;
 import ordenacao.ShellSort;
 import quarto.Quarto;
+import reserva.ArvoreReservasCanceladas;
 import reserva.Reserva;
 
 public class Hotel {
@@ -19,12 +20,16 @@ public class Hotel {
 	private Hotel esquerdo, direito, pai;
 	private Quarto raizQuarto;
 	private Cliente raizCliente;
+	private ArvoreReservasCanceladas reservasCanceladas;
 	
 	public Hotel(int id, String nome) {
 		this.id = id;
 		this.nome = nome;
 		this.cor = Cor.VERMELHO;
+		this.reservasCanceladas = new ArvoreReservasCanceladas();
 	}
+	
+	// Se der tempo, trocar cada raiz nas classes pela classe da própria árvore (por exemplo, ArvoreQuartos)
 	
 	public void inserirQuarto(int numero, int categoria) {
 		// Se der tempo, adicionar um método que busca por um quarto
@@ -409,10 +414,17 @@ public class Hotel {
 		return reservas;
 	}
 	
-	public void cancelarReserva(String cpf, LocalDate checkIn) {
+	public void cancelarReserva(String cpf, Reserva reserva) {
+		
+		// Quando duas reservas canceladas com mesmo check-in
+		// (o que é possível) são adicionadas à árvore de 
+		// reservas canceladas, está dando erro.
+		
+		reservasCanceladas.inserirReservaCancelada(reserva);
+		
 		Cliente cliente = procurarCliente(cpf);
 		
-		cliente.setRaiz(cliente.cancelarReservaRecursivo(cliente.getRaiz(), checkIn));
+		cliente.setRaiz(cliente.cancelarReservaRecursivo(cliente.getRaiz(), reserva.getDataCheckIn()));
 	}
 	
 	public List<Cliente> listarClientes(){
@@ -449,6 +461,10 @@ public class Hotel {
 		}
 		
 		return null;
+	}
+	
+	public List<Reserva> listarReservasCanceladas(){
+		return reservasCanceladas.listarCanceladas();
 	}
 
 	public int getId() {
@@ -513,6 +529,14 @@ public class Hotel {
 
 	public void setRaizCliente(Cliente raizCliente) {
 		this.raizCliente = raizCliente;
+	}
+
+	public ArvoreReservasCanceladas getReservasCanceladas() {
+		return reservasCanceladas;
+	}
+
+	public void setReservasCanceladas(ArvoreReservasCanceladas reservasCanceladas) {
+		this.reservasCanceladas = reservasCanceladas;
 	}
 	
 }

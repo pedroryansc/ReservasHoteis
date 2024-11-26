@@ -421,14 +421,37 @@ public class Main {
 												
 												Reserva reserva = reservas.get(opcaoReserva - 1);
 												
-												Cliente cliente = procurarReserva(cliente.getCpf(), reserva.getDataCheckIn());
-												
-												reservaCancelada = hotel.cancelarReserva(cliente.getCpf(), reserva.getDataCheckIn());
+												hotel.cancelarReserva(cliente.getCpf(), reserva);
 												
 												System.out.println("\nReserva cancelada com sucesso!");
 											}
 										}
 									}
+									
+									System.out.println();
+								} else if(opcao == 5) {
+									
+									// Histórico de reservas canceladas
+									
+									System.out.println("Histórico de Reservas Canceladas \n");
+									
+									List<Reserva> reservasCanceladas = hotel.listarReservasCanceladas();
+									
+									if(reservasCanceladas.isEmpty())
+										System.out.println("Nenhuma reserva foi cancelada. \n");
+									else {
+										for(Reserva reserva : reservasCanceladas) {
+											System.out.println("Cliente: " + reserva.getNomeCliente() + "\n"
+												+ "Quarto: " + reserva.getNumQuarto() + " (" + reserva.getCategoriaQuarto() + ") \n"
+												+ "Check-in/Check-out: " + reserva.getDataCheckInString() + " - " + reserva.getDataCheckOutString()
+												+ "\n");
+										}
+									}
+									
+									System.out.println("Insira qualquer tecla para voltar:");
+									
+									entrada.nextLine();
+									entrada.nextLine();
 									
 									System.out.println();
 								} else if(opcao == 6) {
