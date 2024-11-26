@@ -298,9 +298,13 @@ public class Main {
 									
 									List<Cliente> clientes = hotel.listarClientes();
 									
-									if(clientes.isEmpty())
-										System.out.println("Não foram encontrados clientes e, portanto, reservas. Cadastre uma reserva primeiro.");
-									else {
+									if(clientes.isEmpty()) {
+										System.out.println("Não foram encontrados clientes e, portanto, reservas. Cadastre uma reserva primeiro. \n \n"
+												+ "Insira qualquer tecla para voltar:");
+										
+										entrada.nextLine();
+										entrada.nextLine();
+									} else {
 										int opcaoCliente;
 										
 										do {
@@ -336,13 +340,95 @@ public class Main {
 														+ "\n");
 												}
 											}
+											
+											System.out.println("Insira qualquer tecla para voltar:");
+									
+											entrada.nextLine();
+											entrada.nextLine();
 										}
 									}
 									
-									System.out.println("Insira qualquer tecla para voltar:");
+									System.out.println();
+								} else if(opcao == 4) {
 									
-									entrada.nextLine();
-									entrada.nextLine();
+									// Cancelar reserva
+									
+									System.out.println("Cancelamento de Reserva \n");
+									
+									List<Cliente> clientes = hotel.listarClientes();
+									
+									if(clientes.isEmpty()) {
+										System.out.println("Não foram encontrados clientes e, portanto, reservas. Cadastre uma reserva primeiro. \n \n"
+												+ "Insira qualquer tecla para voltar:");
+										
+										entrada.nextLine();
+										entrada.nextLine();
+									} else {
+										int opcaoCliente;
+										
+										do {
+											System.out.println("Você gostaria de cancelar a reserva de qual cliente?");
+											
+											int i = 1;
+											for(Cliente cliente : clientes) {
+												System.out.println("(" + i + ") " + cliente.getNome() + " (" + cliente.getCpf() + ")");
+												i++;
+											}
+											System.out.println("(0) Voltar");
+											
+											opcaoCliente = entrada.nextInt();
+											
+											invalido = opcaoCliente < 0 || opcaoCliente > clientes.size();
+											
+											verificaValidade(invalido);
+										} while(invalido);
+										
+										System.out.println();
+										
+										if(opcaoCliente == 0)
+											System.out.println("Operação cancelada.");
+										else {
+											Cliente cliente = clientes.get(opcaoCliente - 1);
+											
+											List<Reserva> reservas = cliente.listarReservasCliente();
+											
+											if(reservas.isEmpty()) {
+												System.out.println("Nenhuma reserva de " + cliente.getNome() + " foi encontrada. \n \n"
+														+ "Insira qualquer tecla para voltar:");
+												
+												entrada.nextLine();
+												entrada.nextLine();
+											} else {
+												int opcaoReserva;
+												
+												do {
+													System.out.println("Qual reserva você gostaria de cancelar? \n");
+													
+													int i = 1;
+													for(Reserva reserva : reservas) {
+														System.out.println("(" + i + ") Quarto " + reserva.getNumQuarto() + " ("
+															+ reserva.getCategoriaQuarto() + ") \nCheck-In/Check-Out: "
+															+ reserva.getDataCheckInString() + " - " + reserva.getDataCheckOutString() + "\n");
+														i++;
+													}
+													
+													opcaoReserva = entrada.nextInt();
+													
+													invalido = opcaoReserva < 1 || opcaoReserva > reservas.size();
+													
+													verificaValidade(invalido);
+												} while(invalido);
+												
+												Reserva reserva = reservas.get(opcaoReserva - 1);
+												
+												Cliente cliente = procurarReserva(cliente.getCpf(), reserva.getDataCheckIn());
+												
+												reservaCancelada = hotel.cancelarReserva(cliente.getCpf(), reserva.getDataCheckIn());
+												
+												System.out.println("\nReserva cancelada com sucesso!");
+											}
+										}
+									}
 									
 									System.out.println();
 								} else if(opcao == 6) {

@@ -40,7 +40,7 @@ public class Cliente {
 		return atual;
 	}
 	
-	public void balancearArvore(Reserva reserva) {
+	public Reserva balancearArvore(Reserva reserva) {
 		Reserva pai, avo;
 		
 		// Enquanto o pai do nó for vermelho (e, portanto, houver violação)
@@ -104,6 +104,8 @@ public class Cliente {
 		}
 		
 		raiz.setCor(Cor.PRETO);
+		
+		return reserva;
 	}
 	
 	private void rotacaoEsquerda(Reserva reserva) {
@@ -179,6 +181,42 @@ public class Cliente {
 		}
 		
 		return reservas;
+	}
+	
+	public Reserva cancelarReservaRecursivo(Reserva atual, LocalDate checkIn) {
+		if(atual == null)
+			return null;
+		
+		if(checkIn.isBefore(atual.getDataCheckIn()))
+			atual.setEsquerdo(cancelarReservaRecursivo(atual.getEsquerdo(), checkIn));
+		else if(checkIn.isAfter(atual.getDataCheckIn()))
+			atual.setDireito(cancelarReservaRecursivo(atual.getDireito(), checkIn));
+		else {
+			if(atual.getEsquerdo() == null)
+				return atual.getDireito();
+			else if(atual.getDireito() == null)
+				return atual.getEsquerdo();
+			else {
+				Reserva sucessor = encontrarSucessor(atual.getDireito());
+				
+				atual.setDataCheckIn(sucessor.getDataCheckIn());
+				atual.setDataCheckOut(sucessor.getDataCheckOut());
+				atual.setNomeCliente(sucessor.getNomeCliente());
+				atual.setNumQuarto(sucessor.getNumQuarto());
+				atual.setCategoriaQuarto(sucessor.getCategoriaQuarto());
+				
+				atual.setDireito(cancelarReservaRecursivo(atual.getDireito(), sucessor.getDataCheckIn()));
+			}
+		}
+		
+		return balancearArvore(atual);
+	}
+	
+	private Reserva encontrarSucessor(Reserva atual) {
+		while(atual.getEsquerdo() != null)
+			atual = atual.getEsquerdo();
+		
+		return atual;
 	}
 
 	public String getCpf() {

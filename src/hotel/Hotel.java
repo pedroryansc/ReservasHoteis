@@ -252,7 +252,7 @@ public class Hotel {
 		raizCliente = inserirReservaRecursivo(getRaizCliente(), cliente, novaReserva);
 		
 		if(novoCliente)
-			balancearArvoreClientes(cliente);	
+			balancearArvoreClientes(cliente);
 	}
 	
 	private Cliente inserirReservaRecursivo(Cliente atual, Cliente cliente, Reserva novaReserva) {
@@ -407,6 +407,12 @@ public class Hotel {
 		}
 		
 		return reservas;
+	}
+	
+	public void cancelarReserva(String cpf, LocalDate checkIn) {
+		Cliente cliente = procurarCliente(cpf);
+		
+		cliente.setRaiz(cliente.cancelarReservaRecursivo(cliente.getRaiz(), checkIn));
 	}
 	
 	public List<Cliente> listarClientes(){
