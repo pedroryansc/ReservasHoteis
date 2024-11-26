@@ -8,15 +8,16 @@ import enumerado.Cor;
 
 public class Reserva {
 
-	private int numQuarto;
 	private LocalDate dataCheckIn;
 	private LocalDate dataCheckOut;
+	private String nomeCliente;
+	private int numQuarto;
 	private Categoria categoriaQuarto;
 	private Cor cor;
 	private Reserva esquerdo, direito, pai;
 	private DateTimeFormatter formato;
 	
-	public Reserva(int numQuarto, String dataCheckIn, String dataCheckOut, Categoria categoriaQuarto) {
+	public Reserva(int numQuarto, String dataCheckIn, String dataCheckOut, String nomeCliente, Categoria categoriaQuarto) {
 		this.numQuarto = numQuarto;
 		
 		formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -24,15 +25,8 @@ public class Reserva {
 		this.dataCheckIn = LocalDate.parse(dataCheckIn, formato);
 		this.dataCheckOut = LocalDate.parse(dataCheckOut, formato);
 		
+		this.nomeCliente = nomeCliente;
 		this.categoriaQuarto = categoriaQuarto;
-	}
-
-	public int getNumQuarto() {
-		return numQuarto;
-	}
-
-	public void setNumQuarto(int numQuarto) {
-		this.numQuarto = numQuarto;
 	}
 
 	public LocalDate getDataCheckIn() {
@@ -57,6 +51,22 @@ public class Reserva {
 
 	public void setDataCheckOut(LocalDate dataCheckOut) {
 		this.dataCheckOut = dataCheckOut;
+	}
+	
+	public String getNomeCliente() {
+		return nomeCliente;
+	}
+
+	public void setNomeCliente(String nomeCliente) {
+		this.nomeCliente = nomeCliente;
+	}
+
+	public int getNumQuarto() {
+		return numQuarto;
+	}
+
+	public void setNumQuarto(int numQuarto) {
+		this.numQuarto = numQuarto;
 	}
 
 	public Categoria getCategoriaQuarto() {

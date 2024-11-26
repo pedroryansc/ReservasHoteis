@@ -1,6 +1,8 @@
 package cliente;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import enumerado.Cor;
 import reserva.Reserva;
@@ -148,11 +150,8 @@ public class Cliente {
 	
 	public boolean estaOcupadoRecursivo(Reserva atual, int numQuarto, LocalDate checkIn, LocalDate checkOut) {
 		if(atual != null) {
-			atual.getDataCheckIn();
 			// Se o número do quarto da reserva for o do quarto que está sendo verificado
-			if((atual.getNumQuarto() == numQuarto
-					&& (atual.getDataCheckIn().isBefore(checkOut) || atual.getDataCheckIn().equals(checkOut))
-					&& (atual.getDataCheckOut().isAfter(checkIn)) || atual.getDataCheckOut().equals(checkIn))
+			if(atual.getNumQuarto() == numQuarto && verificaSobreposicaoDatas(atual, checkIn, checkOut)
 				|| estaOcupadoRecursivo(atual.getEsquerdo(), numQuarto, checkIn, checkOut) ||
 				estaOcupadoRecursivo(atual.getDireito(), numQuarto, checkIn, checkOut)) {
 				return true;
@@ -160,6 +159,27 @@ public class Cliente {
 		}
 		
 		return false;
+	}
+	
+	private boolean verificaSobreposicaoDatas(Reserva atual, LocalDate checkIn, LocalDate checkOut) {
+		return (atual.getDataCheckIn().isBefore(checkOut) || atual.getDataCheckIn().equals(checkOut))
+				&& ((atual.getDataCheckOut().isAfter(checkIn)) || atual.getDataCheckOut().equals(checkIn));
+	}
+	
+	public List<Reserva> listarReservasCliente(){
+		List<Reserva> reservas = new ArrayList<Reserva>();
+		
+		return listarReservasRecursivo(getRaiz(), reservas);
+	}
+	
+	public List<Reserva> listarReservasRecursivo(Reserva atual, List<Reserva> reservas){
+		if(atual != null) {
+			listarReservasRecursivo(atual.getEsquerdo(), reservas);
+			reservas.add(atual);
+			listarReservasRecursivo(atual.getDireito(), reservas);
+		}
+		
+		return reservas;
 	}
 
 	public String getCpf() {

@@ -7,6 +7,7 @@ import java.util.List;
 
 import cliente.Cliente;
 import enumerado.Cor;
+import ordenacao.ShellSort;
 import quarto.Quarto;
 import reserva.Reserva;
 
@@ -188,14 +189,19 @@ public class Hotel {
 		LocalDate checkIn = LocalDate.parse(dataCheckIn, formato);
 		LocalDate checkOut = LocalDate.parse(dataCheckOut, formato);
 		
-		return estaOcupadoRecursivo(getRaizCliente(), numQuarto, checkIn, checkOut);
+		boolean estaOcupado = estaOcupadoRecursivo(getRaizCliente(), numQuarto, checkIn, checkOut);
+		
+		if(estaOcupado)
+			System.out.println("\nO quarto " + numQuarto + " está reservado durante o período especificado. \n");
+		
+		return estaOcupado;
 	}
 	
 	private boolean estaOcupadoRecursivo(Cliente atual, int numQuarto, LocalDate checkIn, LocalDate checkOut) {
 		if(atual != null) {
 			if(atual.estaOcupadoRecursivo(atual.getRaiz(), numQuarto, checkIn, checkOut)
-				|| atual.estaOcupadoRecursivo(atual.getEsquerdo().getRaiz(), numQuarto, checkIn, checkOut)
-				|| atual.estaOcupadoRecursivo(atual.getDireito().getRaiz(), numQuarto, checkIn, checkOut))
+				|| (atual.getEsquerdo() != null && atual.estaOcupadoRecursivo(atual.getEsquerdo().getRaiz(), numQuarto, checkIn, checkOut))
+				|| (atual.getDireito() != null && atual.estaOcupadoRecursivo(atual.getDireito().getRaiz(), numQuarto, checkIn, checkOut)))
 				return true;
 		}
 		
@@ -203,7 +209,7 @@ public class Hotel {
 	}
 	
 	public void inserirReserva(String cpf, String nome, Quarto quarto, String dataCheckIn, String dataCheckOut) {
-		Reserva novaReserva = new Reserva(quarto.getNumero(), dataCheckIn, dataCheckOut, quarto.getCategoria());
+		Reserva novaReserva = new Reserva(quarto.getNumero(), dataCheckIn, dataCheckOut, nome, quarto.getCategoria());
 		
 		Cliente cliente = procurarCliente(cpf);
 		
@@ -354,6 +360,40 @@ public class Hotel {
 		
 		novoCliente.setDireito(cliente);
 		cliente.setPai(novoCliente);
+	}
+	
+	public List<Reserva> listarReservas() {
+		List<Reserva> reservas = new ArrayList<Reserva>();
+		
+		listarReservasRecursivo(getRaizCliente(), reservas);
+		
+		return ShellSort.ordenarPorCheckIn(reservas);
+	}
+	
+	private List<Reserva> listarReservasRecursivo(Cliente atual, List<Reserva> reservas){
+		if(atual != null) {
+			listarReservasRecursivo(atual.getEsquerdo(), reservas);
+			atual.listarReservasRecursivo(atual.getRaiz(), reservas);
+			listarReservasRecursivo(atual.getDireito(), reservas);
+		}
+		
+		return reservas;
+	}
+	
+	public List<Cliente> listarClientes(){
+		List<Cliente> clientes = new ArrayList<Cliente>();
+		
+		return listarClientesRecursivo(getRaizCliente(), clientes);
+	}
+	
+	private List<Cliente> listarClientesRecursivo(Cliente atual, List<Cliente> clientes){
+		if(atual != null) {
+			listarClientesRecursivo(atual.getEsquerdo(), clientes);
+			clientes.add(atual);
+			listarClientesRecursivo(atual.getDireito(), clientes);
+		}
+		
+		return clientes;
 	}
 	
 	public Cliente procurarCliente(String cpf) {

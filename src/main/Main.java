@@ -10,6 +10,7 @@ import enumerado.Categoria;
 import hotel.ArvoreHoteis;
 import hotel.Hotel;
 import quarto.Quarto;
+import reserva.Reserva;
 
 public class Main {
 	
@@ -22,8 +23,7 @@ public class Main {
 		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		
 		try {
-			LocalDate dataCorreta = LocalDate.parse(data, formato);
-			System.out.println(dataCorreta);
+			LocalDate.parse(data, formato);
 			
 			return true;
 		} catch(Exception e) {
@@ -43,7 +43,12 @@ public class Main {
 		redeHoteis.inserir("Hilton Hotel");
 		
 		List<Hotel> listaHoteis = redeHoteis.listarHoteis();
+		
 		listaHoteis.get(0).inserirQuarto(501, 1);
+		
+		List<Quarto> listaQuartos = listaHoteis.get(0).listarQuartos();
+		
+		listaHoteis.get(0).inserirReserva("09341570905", "Pedro Ryan Coelho Iplinski", listaQuartos.get(0), "25/11/2024", "27/11/2024");
 		
 		/*
 		redeHoteis.inserir("Rosewood São Paulo");
@@ -149,13 +154,14 @@ public class Main {
 								
 								do {
 									System.out.println("O que você gostaria de fazer? \n"
-										+ "(1) Reservar quarto \n(2) Consultar reservas \n(3) Cancelar reserva \n"
-										+ "(4) Histórico de reservas canceladas \n(5) Cadastrar quarto \n(6) Consultar quartos \n"
+										+ "(1) Reservar quarto \n(2) Consultar reservas \n(3) Consultar reservas por cliente \n"
+										+ "(4) Cancelar reserva \n(5) Histórico de reservas canceladas \n(6) Cadastrar quarto \n"
+										+ "(7) Consultar quartos \n(8) Consultar disponibilidade de um quarto \n"
 										+ "(0) Voltar");
 									
 									opcao = entrada.nextInt();
 									
-									invalido = opcao < 0 || opcao > 6;
+									invalido = opcao < 0 || opcao > 8;
 									
 									verificaValidade(invalido);
 								} while(invalido);
@@ -194,6 +200,8 @@ public class Main {
 										if(dataCheckIn.equals(""))
 											System.out.println("Cadastro cancelado.");
 										else {
+											System.out.println();
+											
 											String dataCheckOut;
 											
 											// Se der tempo, adicionar uma verificação
@@ -204,8 +212,10 @@ public class Main {
 												System.out.println("Data de Check-Out (Dia/Mês/Ano):");
 												dataCheckOut = entrada.nextLine();
 														
-												invalido = !verificaData(dataCheckIn);
+												invalido = !verificaData(dataCheckOut);
 											} while(invalido);
+											
+											System.out.println();
 											
 											int numQuarto;
 											
@@ -223,21 +233,18 @@ public class Main {
 												
 												invalido = numQuarto < 0 || numQuarto > quartos.size();
 												
-												if(!invalido)
-													invalido = hotel.estaOcupado(numQuarto, dataCheckIn, dataCheckOut);
+												verificaValidade(invalido);
+												
+												if(!invalido && numQuarto != 0)
+													invalido = hotel.estaOcupado(quartos.get(numQuarto - 1).getNumero(), dataCheckIn, dataCheckOut);
 											} while(invalido);
 											
 											if(numQuarto == 0)
 												System.out.println("\nCadastro cancelado.");
 											else {
-												/*
-												if(invalido) {
-													System.out.println("O quarto " + quartos.get(numQuarto - 1).getNumero() + " está reservado "
-														+ "durante o período especificado.");
-												}
-												*/
+												entrada.nextLine();
 												
-												System.out.println("CPF do cliente (excluindo pontos e hífen):");
+												System.out.println("\nCPF do cliente (excluindo pontos e hífen):");
 												String cpf = entrada.nextLine();
 												
 												String nome;
@@ -245,21 +252,12 @@ public class Main {
 												Cliente cliente = hotel.procurarCliente(cpf);
 												
 												if(cliente == null) {
-													System.out.println("Nome do cliente:");
+													System.out.println("\nNome do cliente:");
 													nome = entrada.nextLine();
 												} else
 													nome = cliente.getNome();
 												
 												hotel.inserirReserva(cpf, nome, quartos.get(numQuarto - 1), dataCheckIn, dataCheckOut);
-												
-												/*
-													Ideia: Ao invés de Hotel conter Clientes e, assim, Clientes conter Reservas,
-													Hotel poderia conter Reservas e, depois, Reservas poderia conter Detalhes da Reserva,
-													entre os quais estariam as informações do cliente.
-													
-													Desta forma, as reservas seriam ordenadas pela data de check-in (ou seja,
-													um hotel armazenaria uma reserva a partir de sua data de check-in).
-												*/
 												
 												System.out.println("\nCadastro realizado com sucesso!");
 											}
@@ -267,7 +265,87 @@ public class Main {
 									}
 									
 									System.out.println();
-								} else if(opcao == 5) {
+								} else if(opcao == 2) {
+									
+									// Consultar reservas
+									
+									System.out.println("Reservas \n");
+									
+									List<Reserva> reservas = hotel.listarReservas();
+									
+									if(reservas.isEmpty())
+										System.out.println("Nenhuma reserva foi encontrada. \n");
+									else {
+										for(Reserva reserva : reservas) {
+											System.out.println("Cliente: " + reserva.getNomeCliente() + "\n"
+												+ "Quarto: " + reserva.getNumQuarto() + " (" + reserva.getCategoriaQuarto() + ") \n"
+												+ "Check-in/Check-out: " + reserva.getDataCheckInString() + " - " + reserva.getDataCheckOutString()
+												+ "\n");
+										}
+									}
+									
+									System.out.println("Insira qualquer tecla para voltar:");
+									
+									entrada.nextLine();
+									entrada.nextLine();
+									
+									System.out.println();
+								} else if(opcao == 3) {
+									
+									// Consultar reservas por cliente
+									
+									System.out.println("Reservas por Cliente \n");
+									
+									List<Cliente> clientes = hotel.listarClientes();
+									
+									if(clientes.isEmpty())
+										System.out.println("Não foram encontrados clientes e, portanto, reservas. Cadastre uma reserva primeiro.");
+									else {
+										int opcaoCliente;
+										
+										do {
+											System.out.println("Você gostaria de ver as reservas de qual cliente?");
+											
+											int i = 1;
+											for(Cliente cliente : clientes) {
+												System.out.println("(" + i + ") " + cliente.getNome() + " (" + cliente.getCpf() + ")");
+												i++;
+											}
+											System.out.println("(0) Voltar");
+											
+											opcaoCliente = entrada.nextInt();
+											
+											invalido = opcaoCliente < 0 || opcaoCliente > clientes.size();
+											
+											verificaValidade(invalido);
+										} while(invalido);
+										
+										if(opcaoCliente > 0) {
+											Cliente cliente = clientes.get(opcaoCliente - 1);
+											
+											System.out.println("\nReservas de " + cliente.getNome() + " (" + cliente.getCpf() + ") \n");
+											
+											List<Reserva> reservas = cliente.listarReservasCliente();
+											
+											if(reservas.isEmpty())
+												System.out.println("Nenhuma reserva foi encontrada. \n");
+											else {
+												for(Reserva reserva : reservas) {
+													System.out.println("Quarto: " + reserva.getNumQuarto() + " (" + reserva.getCategoriaQuarto() + ") \n"
+														+ "Check-in/Check-out: " + reserva.getDataCheckInString() + " - " + reserva.getDataCheckOutString()
+														+ "\n");
+												}
+											}
+										}
+									}
+									
+									System.out.println("Insira qualquer tecla para voltar:");
+									
+									entrada.nextLine();
+									entrada.nextLine();
+									
+									System.out.println();
+								} else if(opcao == 6) {
 									
 									// Cadastrar quarto
 									
@@ -303,13 +381,13 @@ public class Main {
 									}
 									
 									System.out.println();
-								} else if(opcao == 6) {
+								} else if(opcao == 7) {
 									
 									// Consultar quartos
 									
-									List<Quarto> quartos = hotel.listarQuartos();
-									
 									System.out.println("Quartos de " + hotel.getNome() + "\n");
+									
+									List<Quarto> quartos = hotel.listarQuartos();
 									
 									if(quartos.isEmpty())
 										System.out.println("Nenhum quarto foi cadastrado.");
