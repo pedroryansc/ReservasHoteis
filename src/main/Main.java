@@ -156,7 +156,7 @@ public class Main {
 									System.out.println("O que você gostaria de fazer? \n"
 										+ "(1) Reservar quarto \n(2) Consultar reservas \n(3) Consultar reservas por cliente \n"
 										+ "(4) Cancelar reserva \n(5) Histórico de reservas canceladas \n(6) Cadastrar quarto \n"
-										+ "(7) Consultar quartos \n(8) Consultar disponibilidade de um quarto \n"
+										+ "(7) Consultar quartos \n(8) Consultar disponibilidade de quartos \n"
 										+ "(0) Voltar");
 									
 									opcao = entrada.nextInt();
@@ -400,6 +400,90 @@ public class Main {
 									
 									entrada.nextLine();
 									entrada.nextLine();
+									
+									System.out.println();
+								} else if(opcao == 8) {
+									
+									// Consultar disponibilidade de quartos
+									
+									System.out.println("Disponibilidade de Quartos \n");
+									
+									List<Quarto> quartos = hotel.listarQuartos();
+									
+									entrada.nextLine();
+									
+									if(quartos.isEmpty()) {
+										System.out.println("Nenhum quarto foi cadastrado. Primeiro cadastre um quarto. \n \n"
+												+ "Insira qualquer tecla para voltar:");
+										
+										entrada.nextLine();
+									} else {
+										
+										String dataCheckIn;
+										
+										do {
+											System.out.println("Data de Check-in (Dia/Mês/Ano - ou ENTER para cancelar):");
+											dataCheckIn = entrada.nextLine();
+											
+											if(dataCheckIn.equals(""))
+												invalido = false;
+											else
+												invalido = !verificaData(dataCheckIn);
+										} while(invalido);
+										
+										if(!dataCheckIn.equals("")) {
+											System.out.println();
+											
+											String dataCheckOut;
+											
+											// Se der tempo, adicionar uma verificação
+											// que garante que a data de check-out seja igual ou
+											// posterior à data de check-in
+											
+											do {
+												System.out.println("Data de Check-Out (Dia/Mês/Ano):");
+												dataCheckOut = entrada.nextLine();
+														
+												invalido = !verificaData(dataCheckOut);
+											} while(invalido);
+											
+											System.out.println();
+											
+											int opcaoCategoria;
+											
+											do {
+												System.out.println("Categoria do quarto:");
+												for(Categoria categoria : Categoria.values())
+													System.out.println("("+ categoria.getNumOpcao() +") " + categoria.name());
+												
+												opcaoCategoria = entrada.nextInt();
+												
+												invalido = opcaoCategoria < 1 || opcaoCategoria > Categoria.values().length;
+												
+												verificaValidade(invalido);
+											} while(invalido);
+											
+											System.out.println();
+											
+											quartos = hotel.listarQuartosDisponiveis(dataCheckIn, dataCheckOut, opcaoCategoria);
+											
+											if(quartos.isEmpty()) {
+												System.out.println("Nenhum quarto da categoria " + Categoria.getCategoria(opcaoCategoria)
+													+ " está disponível no período especificado.");
+											} else {
+												System.out.println("Há " + quartos.size() + " quarto(s) da categoria "
+													+ Categoria.getCategoria(opcaoCategoria) + " disponível(is): \n");
+												
+												for(Quarto quarto : quartos)
+													System.out.println("- Quarto " + quarto.getNumero());
+											}
+											
+											System.out.println("\nInsira qualquer tecla para voltar:");
+											
+											entrada.nextLine();
+											entrada.nextLine();
+										}
+									}
 									
 									System.out.println();
 								}

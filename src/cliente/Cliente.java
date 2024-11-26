@@ -150,7 +150,6 @@ public class Cliente {
 	
 	public boolean estaOcupadoRecursivo(Reserva atual, int numQuarto, LocalDate checkIn, LocalDate checkOut) {
 		if(atual != null) {
-			// Se o número do quarto da reserva for o do quarto que está sendo verificado
 			if(atual.getNumQuarto() == numQuarto && verificaSobreposicaoDatas(atual, checkIn, checkOut)
 				|| estaOcupadoRecursivo(atual.getEsquerdo(), numQuarto, checkIn, checkOut) ||
 				estaOcupadoRecursivo(atual.getDireito(), numQuarto, checkIn, checkOut)) {

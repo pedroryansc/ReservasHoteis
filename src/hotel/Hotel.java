@@ -208,6 +208,35 @@ public class Hotel {
 		return false;
 	}
 	
+	public List<Quarto> listarQuartosDisponiveis(String dataCheckIn, String dataCheckOut, int opcaoCategoria){
+		List<Quarto> quartosCategoria = new ArrayList<Quarto>();
+		
+		for(Quarto quarto : listarQuartos()) {
+			if(quarto.getCategoria().getNumOpcao() == opcaoCategoria)
+				quartosCategoria.add(quarto);
+		}
+		
+		List<Quarto> quartosDisponiveis = new ArrayList<Quarto>();
+		
+		if(!quartosCategoria.isEmpty()) {
+			DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			
+			LocalDate checkIn = LocalDate.parse(dataCheckIn, formato);
+			LocalDate checkOut = LocalDate.parse(dataCheckOut, formato);
+			
+			boolean estaDisponivel;
+			
+			for(Quarto quarto : quartosCategoria) {
+				estaDisponivel = !estaOcupadoRecursivo(getRaizCliente(), quarto.getNumero(), checkIn, checkOut);
+				
+				if(estaDisponivel)
+					quartosDisponiveis.add(quarto);
+			}
+		}
+		
+		return quartosDisponiveis;
+	}
+	
 	public void inserirReserva(String cpf, String nome, Quarto quarto, String dataCheckIn, String dataCheckOut) {
 		Reserva novaReserva = new Reserva(quarto.getNumero(), dataCheckIn, dataCheckOut, nome, quarto.getCategoria());
 		
@@ -415,25 +444,6 @@ public class Hotel {
 		
 		return null;
 	}
-	
-	/*
-	// Método auxiliar para exibir a árvore
-	public void mostrarArvore() {
-		if(getRaizQuarto() == null)
-			System.out.println("A árvore está vazia.");
-		else
-			mostrarArvoreRecursiva(getRaizQuarto(), "", true);
-	}
-		
-	private void mostrarArvoreRecursiva(Quarto quarto, String prefixo, boolean isFilhoDireito) {
-		if(quarto != null) {
-			System.out.println(prefixo + (isFilhoDireito ? "D|--- " : "E|--- ") + quarto.getNumero() + "- " + quarto.getCor());
-			String novoPrefixo = prefixo + (isFilhoDireito ? " " : "|");
-			mostrarArvoreRecursiva(quarto.getEsquerdo(), novoPrefixo, false);
-			mostrarArvoreRecursiva(quarto.getDireito(), novoPrefixo, true);
-		}
-	}
-	*/
 
 	public int getId() {
 		return id;
