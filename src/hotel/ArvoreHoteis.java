@@ -136,14 +136,5 @@ public class ArvoreHoteis {
 	public void setRaiz(Hotel raiz) {
 		this.raiz = raiz;
 	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("ArvoreHoteis [raiz=");
-		builder.append(raiz);
-		builder.append("]");
-		return builder.toString();
-	}
 	
 }
