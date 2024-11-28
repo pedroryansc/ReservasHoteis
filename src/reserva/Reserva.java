@@ -13,18 +13,15 @@ public class Reserva {
 	private String nomeCliente;
 	private int numQuarto;
 	private Categoria categoriaQuarto;
+	private LocalDate dataCancelamento;
 	private Cor cor;
 	private Reserva esquerdo, direito, pai;
-	private DateTimeFormatter formato;
+	private DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	
 	public Reserva(int numQuarto, String dataCheckIn, String dataCheckOut, String nomeCliente, Categoria categoriaQuarto) {
 		this.numQuarto = numQuarto;
-		
-		formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		
 		this.dataCheckIn = LocalDate.parse(dataCheckIn, formato);
 		this.dataCheckOut = LocalDate.parse(dataCheckOut, formato);
-		
 		this.nomeCliente = nomeCliente;
 		this.categoriaQuarto = categoriaQuarto;
 	}
@@ -77,6 +74,18 @@ public class Reserva {
 		this.categoriaQuarto = categoriaQuarto;
 	}
 	
+	public LocalDate getDataCancelamento() {
+		return dataCancelamento;
+	}
+	
+	public String getDataCancelamentoString() {
+		return dataCancelamento.format(formato);
+	}
+
+	public void setDataCancelamento(LocalDate dataCancelamento) {
+		this.dataCancelamento = dataCancelamento;
+	}
+
 	public Cor getCor() {
 		return cor;
 	}

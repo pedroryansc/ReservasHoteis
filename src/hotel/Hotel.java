@@ -159,6 +159,8 @@ public class Hotel {
 			reserva.getNomeCliente(), reserva.getCategoriaQuarto()
 		);
 		
+		reservaCancelada.setDataCancelamento(LocalDate.now());
+		
 		reservasCanceladas.add(reservaCancelada);
 		
 		reservasCanceladas = ShellSort.ordenarPorCheckIn(reservasCanceladas);
@@ -173,6 +175,31 @@ public class Hotel {
 	
 	public List<Reserva> listarReservasCanceladas(){
 		return reservasCanceladas;
+	}
+	
+	public int calcularQuantCancelamentos(String dataInicio, String dataFim) {
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
+		LocalDate inicio = LocalDate.parse(dataInicio, formato);
+		LocalDate fim = LocalDate.parse(dataFim, formato);
+		
+		int quantCancelamentos = 0;
+		
+		boolean estaNoIntervalo;
+		
+		for(Reserva reserva : reservasCanceladas) {
+			estaNoIntervalo = verificaSobreposicaoDatas(reserva.getDataCancelamento(), inicio, fim);
+			
+			if(estaNoIntervalo)
+				quantCancelamentos++;
+		}
+		
+		return quantCancelamentos;
+	}
+	
+	private boolean verificaSobreposicaoDatas(LocalDate dataCancelamento, LocalDate inicio, LocalDate fim) {
+		return (dataCancelamento.isBefore(fim) || dataCancelamento.equals(fim))
+				&& (dataCancelamento.isAfter(inicio) || dataCancelamento.equals(inicio));
 	}
 	
 	// Listagem dos clientes do hotel

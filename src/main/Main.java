@@ -40,6 +40,7 @@ public class Main {
 		// Criação da árvore de hotéis
 		ArvoreHoteis redeHoteis = new ArvoreHoteis();
 		
+		/*
 		redeHoteis.inserir("Hilton Hotel");
 		
 		List<Hotel> listaHoteis = redeHoteis.listarHoteis();
@@ -49,21 +50,6 @@ public class Main {
 		List<Quarto> listaQuartos = listaHoteis.get(0).listarQuartos();
 		
 		listaHoteis.get(0).inserirReserva("09341570905", "Pedro Ryan Coelho Iplinski", listaQuartos.get(0), "25/11/2024", "27/11/2024");
-		
-		/*
-		redeHoteis.inserir("Rosewood São Paulo");
-		redeHoteis.inserir("Copacabana Palace");
-		redeHoteis.inserir("Hilton Hotel");
-		redeHoteis.inserir("Rosewood São Paulo");
-		redeHoteis.inserir("Copacabana Palace");
-		redeHoteis.inserir("Hilton Hotel");
-		redeHoteis.inserir("Rosewood São Paulo");
-		redeHoteis.inserir("Copacabana Palace");
-		redeHoteis.inserir("Hilton Hotel");
-		redeHoteis.inserir("Rosewood São Paulo");
-		redeHoteis.inserir("Copacabana Palace");
-		
-		redeHoteis.mostrarArvore();
 		*/
 		
 		boolean invalido;
@@ -447,8 +433,8 @@ public class Main {
 										for(Reserva reserva : reservasCanceladas) {
 											System.out.println("Cliente: " + reserva.getNomeCliente() + "\n"
 												+ "Quarto: " + reserva.getNumQuarto() + " (" + reserva.getCategoriaQuarto() + ") \n"
-												+ "Check-in/Check-out: " + reserva.getDataCheckInString() + " - " + reserva.getDataCheckOutString()
-												+ "\n");
+												+ "Check-in/Check-out: " + reserva.getDataCheckInString() + " - " + reserva.getDataCheckOutString() + "\n"
+												+ "(Cancelada no dia " + reserva.getDataCancelamentoString() + ") \n");
 										}
 									}
 									
@@ -689,6 +675,42 @@ public class Main {
 										} else if(opcaoRelatorio == 3) {
 											
 											// Quantidade de cancelamentos em um determinado período
+											
+											System.out.println("Quantidade de Cancelamentos em um determinado período \n");
+											
+											entrada.nextLine();
+											
+											String dataInicio;
+											
+											do {
+												System.out.println("Data inicial (Dia/Mês/Ano - ou ENTER para cancelar):");
+												dataInicio = entrada.nextLine();
+												
+												if(dataInicio.equals(""))
+													invalido = false;
+												else
+													invalido = !verificaData(dataInicio);
+											} while(invalido);
+											
+											if(!dataInicio.equals("")) {
+												System.out.println();
+												
+												String dataFim;
+												
+												do {
+													System.out.println("Data final (Dia/Mês/Ano):");
+													dataFim = entrada.nextLine();
+															
+													invalido = !verificaData(dataFim);
+												} while(invalido);
+												
+												System.out.println();
+												
+												int quantCancelamentos = hotel.calcularQuantCancelamentos(dataInicio, dataFim);
+												
+												System.out.println("Quantidade de reservas canceladas entre " + dataInicio + " e " + dataFim + ": \n"
+														+ quantCancelamentos + " reserva(s)");
+											}
 											
 											System.out.println();
 										}
