@@ -12,7 +12,7 @@ public class ArvoreQuartos {
 	// Cadastro de um novo quarto
 	
 	public void inserir(int numero, int categoria) {
-		// Se der tempo, adicionar um método que busca por um quarto
+		// Possível atualização: Adicionar um método que busca por um quarto
 		// para verificar se ele já foi inserido
 		
 		Quarto novoQuarto = new Quarto(numero, categoria);

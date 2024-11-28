@@ -115,25 +115,6 @@ public class ArvoreHoteis {
 			return atual.getId();
 		}
 	}
-	
-	/*
-	// Método auxiliar para exibir a árvore
-	public void mostrarArvore() {
-		if(getRaiz() == null)
-			System.out.println("A árvore está vazia.");
-		else
-			mostrarArvoreRecursiva(getRaiz(), "", true);
-	}
-		
-	private void mostrarArvoreRecursiva(Hotel hotel, String prefixo, boolean isFilhoDireito) {
-		if(hotel != null) {
-			System.out.println(prefixo + (isFilhoDireito ? "D|--- " : "E|--- ") + hotel.getId() + " " + hotel.getNome() + " (" + hotel.getCor() + ")");
-			String novoPrefixo = prefixo + (isFilhoDireito ? " " : "|");
-			mostrarArvoreRecursiva(hotel.getEsquerdo(), novoPrefixo, false);
-			mostrarArvoreRecursiva(hotel.getDireito(), novoPrefixo, true);
-		}
-	}
-	*/
 
 	public Hotel getRaiz() {
 		return raiz;

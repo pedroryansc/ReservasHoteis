@@ -177,6 +177,8 @@ public class Hotel {
 		return reservasCanceladas;
 	}
 	
+	// Método que calcula a quantidade de reservas canceladas em um determinado período
+	
 	public int calcularQuantCancelamentos(String dataInicio, String dataFim) {
 		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		

@@ -194,7 +194,7 @@ public class Main {
 											
 											String dataCheckOut;
 											
-											// Se der tempo, adicionar uma verificação
+											// Possível atualização: Adicionar uma verificação
 											// que garante que a data de check-out seja igual ou
 											// posterior à data de check-in
 											
@@ -534,10 +534,6 @@ public class Main {
 											System.out.println();
 											
 											String dataCheckOut;
-											
-											// Se der tempo, adicionar uma verificação
-											// que garante que a data de check-out seja igual ou
-											// posterior à data de check-in
 											
 											do {
 												System.out.println("Data de Check-Out (Dia/Mês/Ano):");
