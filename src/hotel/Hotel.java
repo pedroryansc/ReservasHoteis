@@ -8,9 +8,9 @@ import java.util.List;
 import cliente.ArvoreClientes;
 import cliente.Cliente;
 import enumerado.Cor;
+import ordenacao.ShellSort;
 import quarto.ArvoreQuartos;
 import quarto.Quarto;
-import reserva.ArvoreReservasCanceladas;
 import reserva.Reserva;
 
 public class Hotel {
@@ -21,7 +21,7 @@ public class Hotel {
 	private Hotel esquerdo, direito, pai;
 	private ArvoreQuartos quartos;
 	private ArvoreClientes clientes;
-	private ArvoreReservasCanceladas reservasCanceladas;
+	private List<Reserva> reservasCanceladas;
 	
 	public Hotel(int id, String nome) {
 		this.id = id;
@@ -30,20 +30,34 @@ public class Hotel {
 		
 		this.quartos = new ArvoreQuartos();
 		this.clientes = new ArvoreClientes();
-		this.reservasCanceladas = new ArvoreReservasCanceladas();
+		this.reservasCanceladas = new ArrayList<Reserva>();
 	}
+	
+	// Cadastro de um novo quarto
 	
 	public void inserirQuarto(int numero, int categoria) {
 		quartos.inserir(numero, categoria);
 	}
 	
+	// Listagem dos quartos do hotel
+	
 	public List<Quarto> listarQuartos(){
 		return quartos.listar();
 	}
 	
+	public List<Quarto> listarQuartosPorReservas(){
+		List<Quarto> quartos = listarQuartos();
+		
+		return ShellSort.ordenarPorQuantReservas(quartos);
+	}
+	
+	// Método que verifica se um certo quarto está ocupado em um determinado período
+	
 	public boolean estaOcupado(int numQuarto, String dataCheckIn, String dataCheckOut) {
 		return clientes.estaOcupado(numQuarto, dataCheckIn, dataCheckOut);
 	}
+	
+	// Listagem dos quartos de uma certa categoria disponíveis em um determinado período
 	
 	public List<Quarto> listarQuartosDisponiveis(String dataCheckIn, String dataCheckOut, int opcaoCategoria){
 		List<Quarto> quartosCategoria = new ArrayList<Quarto>();
@@ -74,32 +88,48 @@ public class Hotel {
 		return quartosDisponiveis;
 	}
 	
+	// Cadastro de uma nova reserva
+	
 	public void inserirReserva(String cpf, String nome, Quarto quarto, String dataCheckIn, String dataCheckOut) {
+		quarto.addQuantReservas();
+		
 		clientes.inserirReserva(cpf, nome, quarto, dataCheckIn, dataCheckOut);
 	}
+	
+	// Listagem de reservas do hotel
 	
 	public List<Reserva> listarReservas() {
 		return clientes.listarReservas();
 	}
 	
+	// Cancelamento de uma reserva e sua adição no histórico de reservas canceladas
+	
 	public void cancelarReserva(String cpf, Reserva reserva) {
+		Reserva reservaCancelada = new Reserva(
+			reserva.getNumQuarto(), reserva.getDataCheckInString(), reserva.getDataCheckOutString(),
+			reserva.getNomeCliente(), reserva.getCategoriaQuarto()
+		);
 		
-		// Quando duas reservas canceladas com mesmo check-in
-		// (o que é possível) são adicionadas à árvore de 
-		// reservas canceladas, está dando erro.
+		reservasCanceladas.add(reservaCancelada);
 		
-		reservasCanceladas.inserirReservaCancelada(reserva);
+		reservasCanceladas = ShellSort.ordenarPorCheckIn(reservasCanceladas);
 		
 		clientes.cancelarReserva(cpf, reserva);
 	}
+	
+	// Listagem das reservas canceladas do hotel
+	
+	public List<Reserva> listarReservasCanceladas(){
+		return reservasCanceladas;
+	}
+	
+	// Listagem dos clientes do hotel
 	
 	public List<Cliente> listarClientes(){
 		return clientes.listarClientes();
 	}
 	
-	public List<Reserva> listarReservasCanceladas(){
-		return reservasCanceladas.listarCanceladas();
-	}
+	// Método que busca por um cliente a partir de seu CPF e o retorna se for encontrado
 	
 	public Cliente procurarCliente(String cpf) {
 		return clientes.procurarCliente(cpf);
@@ -167,14 +197,6 @@ public class Hotel {
 
 	public void setClientes(ArvoreClientes clientes) {
 		this.clientes = clientes;
-	}
-
-	public ArvoreReservasCanceladas getReservasCanceladas() {
-		return reservasCanceladas;
-	}
-
-	public void setReservasCanceladas(ArvoreReservasCanceladas reservasCanceladas) {
-		this.reservasCanceladas = reservasCanceladas;
 	}
 	
 }

@@ -9,6 +9,8 @@ public class ArvoreQuartos {
 
 	private Quarto raiz;
 
+	// Cadastro de um novo quarto
+	
 	public void inserir(int numero, int categoria) {
 		// Se der tempo, adicionar um método que busca por um quarto
 		// para verificar se ele já foi inserido
@@ -146,6 +148,8 @@ public class ArvoreQuartos {
 		novoQuarto.setDireito(quarto);
 		quarto.setPai(novoQuarto);
 	}
+	
+	// Listagem de quartos de um hotel
 	
 	public List<Quarto> listar(){
 		List<Quarto> quartos = new ArrayList<Quarto>();

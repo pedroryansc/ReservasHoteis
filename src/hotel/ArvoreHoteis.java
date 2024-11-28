@@ -9,6 +9,8 @@ public class ArvoreHoteis {
 
 	private Hotel raiz;
 	
+	// Cadastro de um novo hotel
+	
 	public void inserir(String nome) {
 		Hotel novoHotel = new Hotel(maiorID() + 1, nome);
 		
@@ -81,6 +83,8 @@ public class ArvoreHoteis {
 		hotel.setPai(novoHotel);
 	}
 	
+	// Listagem de hotéis
+	
 	public List<Hotel> listarHoteis(){
 		List<Hotel> hoteis = new ArrayList<Hotel>();
 		
@@ -96,6 +100,8 @@ public class ArvoreHoteis {
 		
 		return hoteis;
 	}
+	
+	// Método que retorna o maior ID na árvore
 	
 	private int maiorID() {
 		if(getRaiz() == null)

@@ -7,12 +7,14 @@ public class Quarto {
 
 	private int numero;
 	private Categoria categoria;
+	private int quantReservas;
 	private Cor cor;
 	private Quarto esquerdo, direito, pai;
 	
 	public Quarto(int numero, int opcaoCategoria) {
 		this.numero = numero;
 		this.categoria = Categoria.getCategoria(opcaoCategoria);
+		this.quantReservas = 0;
 		this.cor = Cor.VERMELHO;
 	}
 
@@ -30,6 +32,14 @@ public class Quarto {
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	public int getQuantReservas() {
+		return quantReservas;
+	}
+
+	public void addQuantReservas() {
+		quantReservas++;
 	}
 
 	public Cor getCor() {

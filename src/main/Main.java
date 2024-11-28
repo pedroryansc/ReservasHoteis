@@ -150,18 +150,20 @@ public class Main {
 							Hotel hotel = hoteis.get(opcaoHotel - 1);
 							
 							while(opcao > 0) {
+								int opcaoRelatorio = 1;
+								
 								System.out.println("Menu do " + hotel.getNome() + "\n");
 								
 								do {
 									System.out.println("O que você gostaria de fazer? \n"
 										+ "(1) Reservar quarto \n(2) Consultar reservas \n(3) Consultar reservas por cliente \n"
 										+ "(4) Cancelar reserva \n(5) Histórico de reservas canceladas \n(6) Cadastrar quarto \n"
-										+ "(7) Consultar quartos \n(8) Consultar disponibilidade de quartos \n"
+										+ "(7) Consultar quartos \n(8) Consultar disponibilidade de quartos \n(9) Consultar relatórios \n"
 										+ "(0) Voltar");
 									
 									opcao = entrada.nextInt();
 									
-									invalido = opcao < 0 || opcao > 8;
+									invalido = opcao < 0 || opcao > 9;
 									
 									verificaValidade(invalido);
 								} while(invalido);
@@ -591,6 +593,97 @@ public class Main {
 											
 											entrada.nextLine();
 											entrada.nextLine();
+										}
+									}
+									
+									System.out.println();
+								} else if(opcao == 9) {
+									
+									// Relatórios com estatísticas do hotel
+									
+									while(opcaoRelatorio > 0) {
+										System.out.println("Relatórios \n");
+										
+										do {
+											System.out.println("Qual relatório você gostaria de conferir? \n"
+												+ "(1) Taxa de ocupação do hotel em um período específico \n(2) Quartos mais e menos reservados \n"
+												+ "(3) Quantidade de cancelamentos em um determinado período \n(0) Voltar");
+											
+											opcaoRelatorio = entrada.nextInt();
+											
+											invalido = opcaoRelatorio < 0 || opcaoRelatorio > 3;
+											
+											verificaValidade(invalido);
+										} while(invalido);
+										
+										System.out.println();
+										
+										if(opcaoRelatorio == 1) {
+											
+											// Taxa de ocupação em um período específico
+											
+											System.out.println("Taxa de ocupação em um período específico \n");
+											
+											String dataInicio;
+											
+											do {
+												System.out.println("Data inicial (Dia/Mês/Ano - ou ENTER para cancelar):");
+												dataInicio = entrada.nextLine();
+												
+												if(dataInicio.equals(""))
+													invalido = false;
+												else
+													invalido = !verificaData(dataInicio);
+											} while(invalido);
+											
+											if(!dataInicio.equals("")) {
+												System.out.println();
+												
+												String dataFim;
+												
+												do {
+													System.out.println("Data final (Dia/Mês/Ano):");
+													dataFim = entrada.nextLine();
+															
+													invalido = !verificaData(dataFim);
+												} while(invalido);
+												
+												System.out.println();
+												
+												
+											}
+											
+											System.out.println();
+										} else if(opcaoRelatorio == 2) {
+											
+											// Quartos mais e menos reservados
+											
+											System.out.println("Quartos mais e menos reservados \n");
+											
+											List<Quarto> quartos = hotel.listarQuartosPorReservas();
+											
+											if(quartos.isEmpty())
+												System.out.println("Nenhum quarto foi cadastrado. Cadastre um quarto primeiro.");
+											else {
+												int i = 1;
+												for(Quarto quarto : quartos) {
+													System.out.println(i + ". Quarto " + quarto.getNumero() + " (" + quarto.getCategoria() + ")"
+														+ " - " + quarto.getQuantReservas() + " reserva(s)");
+													i++;
+												}
+											}
+											
+											System.out.println("\nInsira qualquer tecla para voltar:");
+											
+											entrada.nextLine();
+											entrada.nextLine();
+											
+											System.out.println();
+										} else if(opcaoRelatorio == 3) {
+											
+											// Quantidade de cancelamentos em um determinado período
+											
+											System.out.println();
 										}
 									}
 									

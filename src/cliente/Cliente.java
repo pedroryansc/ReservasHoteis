@@ -21,6 +21,8 @@ public class Cliente {
 		this.cor = Cor.VERMELHO;
 	}
 	
+	// Cadastro de uma nova reserva
+	
 	public Reserva inserirReservaRecursivo(Reserva atual, Reserva novaReserva) {
 		// Caso base: se a posição for nula, insere a nova reserva
 		if(atual == null)
@@ -150,6 +152,8 @@ public class Cliente {
 		reserva.setPai(novaReserva);
 	}
 	
+	// Método que verifica se um certo quarto está ocupado em um determinado período
+	
 	public boolean estaOcupadoRecursivo(Reserva atual, int numQuarto, LocalDate checkIn, LocalDate checkOut) {
 		if(atual != null) {
 			if(atual.getNumQuarto() == numQuarto && verificaSobreposicaoDatas(atual, checkIn, checkOut)
@@ -167,6 +171,8 @@ public class Cliente {
 				&& ((atual.getDataCheckOut().isAfter(checkIn)) || atual.getDataCheckOut().equals(checkIn));
 	}
 	
+	// Listagem das reservas de um cliente
+	
 	public List<Reserva> listarReservasCliente(){
 		List<Reserva> reservas = new ArrayList<Reserva>();
 		
@@ -182,6 +188,8 @@ public class Cliente {
 		
 		return reservas;
 	}
+	
+	// Cancelamento de uma reserva, ou seja, sua remoção da árvore de reservas
 	
 	public Reserva cancelarReservaRecursivo(Reserva atual, LocalDate checkIn) {
 		if(atual == null)

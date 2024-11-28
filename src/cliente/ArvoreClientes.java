@@ -14,6 +14,8 @@ public class ArvoreClientes {
 
 	private Cliente raiz;
 
+	// Cadastro de uma nova reserva e de um novo cliente (caso esse não esteja cadastrado)
+	
 	public void inserirReserva(String cpf, String nome, Quarto quarto, String dataCheckIn, String dataCheckOut) {
 		Reserva novaReserva = new Reserva(quarto.getNumero(), dataCheckIn, dataCheckOut, nome, quarto.getCategoria());
 		
@@ -168,6 +170,8 @@ public class ArvoreClientes {
 		cliente.setPai(novoCliente);
 	}
 	
+	// Listagem das reservas de um hotel
+	
 	public List<Reserva> listarReservas() {
 		List<Reserva> reservas = new ArrayList<Reserva>();
 		
@@ -186,11 +190,15 @@ public class ArvoreClientes {
 		return reservas;
 	}
 	
+	// Cancelamento de uma reserva
+	
 	public void cancelarReserva(String cpf, Reserva reserva) {
 		Cliente cliente = procurarCliente(cpf);
 		
 		cliente.setRaiz(cliente.cancelarReservaRecursivo(cliente.getRaiz(), reserva.getDataCheckIn()));
 	}
+	
+	// Listagem de clientes de um hotel
 	
 	public List<Cliente> listarClientes(){
 		List<Cliente> clientes = new ArrayList<Cliente>();
@@ -207,6 +215,8 @@ public class ArvoreClientes {
 		
 		return clientes;
 	}
+	
+	// Método que busca por um cliente a partir de seu CPF e o retorna se for encontrado
 	
 	public Cliente procurarCliente(String cpf) {
 		if(getRaiz() == null)
@@ -227,6 +237,8 @@ public class ArvoreClientes {
 		
 		return null;
 	}
+	
+	// Método que verifica se um certo quarto está ocupado em um determinado período
 	
 	public boolean estaOcupado(int numQuarto, String dataCheckIn, String dataCheckOut) {
 		if(getRaiz() == null)
