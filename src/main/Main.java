@@ -154,6 +154,8 @@ public class Main {
 								
 								System.out.println("Menu do " + hotel.getNome() + "\n");
 								
+								hotel.verificarOcupacao();
+								
 								do {
 									System.out.println("O que você gostaria de fazer? \n"
 										+ "(1) Reservar quarto \n(2) Consultar reservas \n(3) Consultar reservas por cliente \n"
@@ -624,6 +626,8 @@ public class Main {
 											
 											System.out.println("Taxa de ocupação em um período específico \n");
 											
+											entrada.nextLine();
+											
 											String dataInicio;
 											
 											do {
@@ -650,7 +654,10 @@ public class Main {
 												
 												System.out.println();
 												
+												double taxaOcupacao = hotel.calcularTaxaOcupacao(dataInicio, dataFim);
 												
+												System.out.println("Taxa de ocupação entre " + dataInicio + " e " + dataFim + ": \n"
+														+ taxaOcupacao + "% dos quartos");
 											}
 											
 											System.out.println();

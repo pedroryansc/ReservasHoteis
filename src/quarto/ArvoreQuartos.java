@@ -167,6 +167,28 @@ public class ArvoreQuartos {
 		return quartos;
 	}
 	
+	// Método que busca o quarto pelo seu número e o retorna se for encontrado
+	
+	public Quarto procurarQuarto(int numero) {
+		if(getRaiz() == null)
+			return null;
+		
+		return procurarQuartoRecursivo(getRaiz(), numero);
+	}
+	
+	private Quarto procurarQuartoRecursivo(Quarto atual, int numero) {
+		if(atual != null) {
+			if(numero == atual.getNumero())
+				return atual;
+			else if(numero < atual.getNumero())
+				return procurarQuartoRecursivo(atual.getEsquerdo(), numero);
+			else
+				return procurarQuartoRecursivo(atual.getDireito(), numero);
+		}
+		
+		return null;
+	}
+	
 	public Quarto getRaiz() {
 		return raiz;
 	}

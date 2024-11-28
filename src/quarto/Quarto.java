@@ -38,8 +38,12 @@ public class Quarto {
 		return quantReservas;
 	}
 
-	public void addQuantReservas() {
+	public void maisQuantReservas() {
 		quantReservas++;
+	}
+	
+	public void menosQuantReservas() {
+		quantReservas--;
 	}
 
 	public Cor getCor() {

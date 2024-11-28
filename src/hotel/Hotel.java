@@ -88,10 +88,59 @@ public class Hotel {
 		return quartosDisponiveis;
 	}
 	
+	public Quarto procurarQuarto(int numQuarto) {
+		return quartos.procurarQuarto(numQuarto);
+	}
+	
+	// Método que calcula a taxa de ocupação do hotel em um determinado período
+	
+	public double calcularTaxaOcupacao(String dataInicio, String dataFim) {
+		List<Quarto> quartos = listarQuartos();
+		
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
+		LocalDate inicio = LocalDate.parse(dataInicio, formato);
+		LocalDate fim = LocalDate.parse(dataFim, formato);
+		
+		double quartosOcupados = 0;
+		
+		boolean estaOcupado;
+		
+		for(Quarto quarto : quartos) {
+			estaOcupado = clientes.estaOcupadoRecursivo(clientes.getRaiz(), quarto.getNumero(), inicio, fim);
+			
+			if(estaOcupado)
+				quartosOcupados++;
+		}
+		
+		double taxaOcupacao = (quartosOcupados * 100) / quartos.size();
+		
+		return taxaOcupacao;
+	}
+	
+	// Método que verifica a taxa de ocupação do hotel nos próximos 15 dias para, se for preciso, emitir um alerta
+	
+	public void verificarOcupacao() {
+		if(!listarQuartos().isEmpty()) {
+			LocalDate inicio = LocalDate.now();
+			LocalDate fim = inicio.plusDays(15);
+			
+			DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			
+			String dataInicio = inicio.format(formato);
+			String dataFim = fim.format(formato);
+			
+			double taxaOcupacao = calcularTaxaOcupacao(dataInicio, dataFim);
+			
+			if(taxaOcupacao >= 90)
+				System.out.println("Aviso: Nos próximos 15 dias, o hotel estará com a taxa de " + taxaOcupacao + "% de ocupação. \n");
+		}
+	}
+	
 	// Cadastro de uma nova reserva
 	
 	public void inserirReserva(String cpf, String nome, Quarto quarto, String dataCheckIn, String dataCheckOut) {
-		quarto.addQuantReservas();
+		quarto.maisQuantReservas();
 		
 		clientes.inserirReserva(cpf, nome, quarto, dataCheckIn, dataCheckOut);
 	}
@@ -113,6 +162,9 @@ public class Hotel {
 		reservasCanceladas.add(reservaCancelada);
 		
 		reservasCanceladas = ShellSort.ordenarPorCheckIn(reservasCanceladas);
+		
+		Quarto quarto = procurarQuarto(reserva.getNumQuarto());
+		quarto.menosQuantReservas();
 		
 		clientes.cancelarReserva(cpf, reserva);
 	}
